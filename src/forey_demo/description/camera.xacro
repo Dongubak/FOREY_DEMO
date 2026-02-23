@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <!-- CAMERA_LINK -->
+    <xacro:property name="camera_thickness" value="0.031" />
+    <xacro:property name="chassis_to_camera_x" value="${0.210658 + camera_plate_thickness + camera_thickness/2}" />
+    <xacro:property name="chassis_to_camera_z" value="0.0156962" />
+
+    <joint name="camera_joint" type="fixed">
+        <parent link="chassis" />
+        <child link="camera_link" />
+        <origin xyz="${chassis_to_camera_x} 0 ${chassis_to_camera_z+box_z}" rpy="0 0 0" />
+    </joint>
+
+    <link name="camera_link">
+        <visual>
+            <geometry>
+                <box size="${camera_thickness} 0.09 0.022" />
+            </geometry>
+            <material name="red" />
+        </visual>
+    </link>
+
+</robot>

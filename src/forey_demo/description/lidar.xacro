@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <!-- LiDAR_LINK -->
+    <joint name="LiDAR_joint" type="fixed">
+        <parent link="chassis" />
+        <child link="laser_frame" />
+        <origin xyz="0.141188 0 ${0.1448+white_plate_thickness}" rpy="0 0 0" />
+    </joint>
+
+    <link name="laser_frame">
+        <visual>
+            <geometry>
+                <cylinder radius="0.0385" length="0.019" />
+            </geometry>
+            <material name="green" />
+        </visual>
+    </link>
+
+</robot>
