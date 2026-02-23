@@ -16,7 +16,7 @@ def generate_launch_description():
     use_sim_time = LaunchConfiguration('use_sim_time')
 
     # Process the URDF file
-    pkg_path = os.path.join(get_package_share_directory('FOREY_DEMO'))
+    pkg_path = os.path.join(get_package_share_directory('forey_demo'))
     xacro_file = os.path.join(pkg_path,'description','robot.urdf.xacro')
     robot_description_config = xacro.process_file(xacro_file).toxml()
     
@@ -29,6 +29,12 @@ def generate_launch_description():
         parameters=[params]
     )
 
+    # joint_state_publisher: continuous 조인트 TF 발행에 필요
+    node_joint_state_publisher = Node(
+        package='joint_state_publisher',
+        executable='joint_state_publisher',
+        output='screen'
+    )
 
     # Launch!
     return LaunchDescription([
@@ -37,5 +43,6 @@ def generate_launch_description():
             default_value='false',
             description='Use sim time if true'),
 
-        node_robot_state_publisher
+        node_robot_state_publisher,
+        node_joint_state_publisher
     ])
