@@ -38,6 +38,10 @@
     <xacro:property name="box_y" value="0.106" />
     <xacro:property name="box_z" value="0.057" /> 
 
+    <xacro:property name="white_plate_thickness" value="0.002" /> 
+    <xacro:property name="green_plate_thickness" value="0.005" /> 
+    <xacro:property name="camera_plate_thickness" value="0.004" /> 
+
     <!-- BASE_FOOTPRINT: 지면 기준 고정 프레임 (내비게이션, TF 트리용) -->
     <link name="base_footprint" />
 
@@ -145,7 +149,7 @@
     <joint name="LiDAR_joint" type="fixed">
         <parent link="chassis" />
         <child link="laser_frame" />
-        <origin xyz="0.141188 0 0.1448" rpy="0 0 0" />
+        <origin xyz="0.141188 0 ${0.1448+white_plate_thickness}" rpy="0 0 0" />
     </joint>
 
     <link name="laser_frame">
@@ -156,6 +160,26 @@
             <material name="green" />
         </visual>
     </link>
-    
+
+
+    <!-- CAMERA_LINK -->
+    <xacro:property name="camera_thickness" value="0.031" />
+    <xacro:property name="chassis_to_camera_x" value="${0.210658 + camera_plate_thickness + camera_thickness/2}" />
+    <xacro:property name="chassis_to_camera_z" value="0.0156962" />
+
+    <joint name="camera_joint" type="fixed">
+        <parent link="chassis" />
+        <child link="camera_link" />
+        <origin xyz="${chassis_to_camera_x} 0 ${chassis_to_camera_z+box_z}" rpy="0 0 0" />
+    </joint>©
+
+    <link name="camera_link">
+        <visual>
+            <geometry>
+                <box size="${camera_thickness} 0.09 0.022" />
+            </geometry>
+            <material name="red" />
+        </visual>
+    </link>
 
 </robot>
