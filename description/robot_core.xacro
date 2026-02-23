@@ -1,5 +1,7 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro"  name="robot">
+    <xacro:property name="pi" value="3.14159265359" />
+
     <material name="white">
         <color rgba="1.0 1.0 1.0 1.0" />
     </material>
@@ -20,6 +22,32 @@
         <color rgba="1.0 0.0 0.0 1.0" />
     </material>
 
+    <!-- 바퀴 치수 -->
+    <xacro:property name="wheel_diameter" value="0.0745" />
+    <xacro:property name="wheel_radius" value="${wheel_diameter/2}" />
+
+    <!-- 바퀴 두께 -->
+    <xacro:property name="wheel_width" value="0.02" />
+
+    <!-- base_link 기준 바퀴 위치 -->
+    <xacro:property name="base_link_to_wheel_x" value="0.077" />
+    <xacro:property name="base_link_to_wheel_y" value="0.0235" />
+    <xacro:property name="base_link_to_wheel_z" value="-0.00602" />
+
+    <xacro:property name="box_x" value="0.203" />
+    <xacro:property name="box_y" value="0.106" />
+    <xacro:property name="box_z" value="0.056" />
+
+    <!-- BASE_FOOTPRINT: 지면 기준 고정 프레임 (내비게이션, TF 트리용) -->
+    <link name="base_footprint" />
+
+    <!-- BASE_FOOTPRINT -> BASE_LINK: base_link는 바퀴 반지름(0.05)만큼 지면 위 -->
+    <joint name="base_footprint_joint" type="fixed">
+        <parent link="base_footprint" />
+        <child link="base_link" />
+        <origin xyz="0 0 ${wheel_radius}" rpy="0 0 0" />
+    </joint>
+
     <!-- BASE_LINK -->
     <link name="base_link">
     
@@ -29,14 +57,14 @@
     <joint name="chassis_joint" type="fixed">
         <parent link="base_link" />
         <child link="chassis" />
-        <origin xyz="-0.1 0 0" rpy="0 0 0" />
+        <origin xyz="-${box_x/2} 0 0" rpy="0 0 0" />
     </joint>
 
     <link name="chassis">
         <visual>
-            <origin xyz="0.15 0.0 0.075" rpy="0 0 0" />
+            <origin xyz="${box_x/2} 0.0 ${box_z/2}" rpy="0 0 0" />
             <geometry>
-                <box size="0.3 0.3 0.15" />
+                <box size="${box_x} ${box_y} ${box_z}" />
             </geometry>
             <material name="white" />
         </visual>
@@ -46,32 +74,32 @@
     <joint name="left_front_wheel_joint" type="continuous">
         <parent link="chassis" />
         <child link="left_front_wheel" />
-        <origin xyz="0.3 0.175 0" rpy="-${pi/2} 0 0" />
+        <origin xyz="${base_link_to_wheel_x+box_x/2} ${base_link_to_wheel_y+box_y/2+wheel_width/2} ${base_link_to_wheel_z}" rpy="-${pi/2} 0 0" />
         <axis xyz="0 0 1" />
     </joint>
 
     <link name="left_front_wheel">
         <visual>
             <geometry>
-                <cylinder radius="0.05" length="0.04" />
+                <cylinder radius="${wheel_radius}" length="${wheel_width}" />
             </geometry>
-            <material name="blue" />
+            <material name="red" />
         </visual>
     </link>
 
     <!-- LEFT_REAR_WHEEL_LINK -->
 
-    <joint name="left_wheel_joint" type="continuous">
+    <joint name="left_rear_wheel_joint" type="continuous">
         <parent link="chassis" />
-        <child link="left_wheel" />
-        <origin xyz="0 0.175 0" rpy="-${pi/2} 0 0" />
+        <child link="left_rear_wheel" />
+        <origin xyz="${box_x/2-base_link_to_wheel_x} ${base_link_to_wheel_y+box_y/2+wheel_width/2} ${base_link_to_wheel_z}" rpy="-${pi/2} 0 0" />
         <axis xyz="0 0 1" />
     </joint>
 
-    <link name="left_wheel">
+    <link name="left_rear_wheel">
         <visual>
             <geometry>
-                <cylinder radius="0.05" length="0.04" />
+                <cylinder radius="${wheel_radius}" length="${wheel_width}" />
             </geometry>
             <material name="blue" />
         </visual>
@@ -81,14 +109,14 @@
     <joint name="right_front_wheel_joint" type="continuous">
         <parent link="chassis" />
         <child link="right_front_wheel" />
-        <origin xyz="0.3 -0.175 0" rpy="-${pi/2} 0 0" />
+        <origin xyz="${box_x/2+base_link_to_wheel_x} -${base_link_to_wheel_y+box_y/2} ${base_link_to_wheel_z}" rpy="-${pi/2} 0 0" />
         <axis xyz="0 0 1" />
     </joint>
 
     <link name="right_front_wheel">
         <visual>
             <geometry>
-                <cylinder radius="0.05" length="0.04" />
+                <cylinder radius="${wheel_radius}" length="${wheel_width}" />
             </geometry>
             <material name="blue" />
         </visual>
@@ -96,17 +124,17 @@
 
     <!-- RIGHT_REAR_WHEEL_LINK -->
 
-    <joint name="right_wheel_joint" type="continuous">
+    <joint name="right_rear_wheel_joint" type="continuous">
         <parent link="chassis" />
-        <child link="right_wheel" />
-        <origin xyz="0 -0.175 0" rpy="-${pi/2} 0 0" />
+        <child link="right_rear_wheel" />
+        <origin xyz="${box_x/2-base_link_to_wheel_x} -${base_link_to_wheel_y+box_y/2} ${base_link_to_wheel_z}" rpy="-${pi/2} 0 0" />
         <axis xyz="0 0 1" />
     </joint>
 
-    <link name="right_wheel">
+    <link name="right_rear_wheel">
         <visual>
             <geometry>
-                <cylinder radius="0.05" length="0.04" />
+                <cylinder radius="${wheel_radius}" length="${wheel_width}" />
             </geometry>
             <material name="blue" />
         </visual>
